@@ -1,0 +1,11 @@
+lapresselibre_verification:
+    path:     /verification
+    defaults: { _controller: 'mediapart_lapresselibre.controller:executeAction' }
+
+lapresselibre_account_creation:
+    path:     /account-creation
+    defaults: { _controller: 'mediapart_lapresselibre.controller:executeAction' }
+
+lapresselibre_account_updates:
+    path:     /account-updates
+    defaults: { _controller: 'mediapart_lapresselibre.controller:executeAction' }

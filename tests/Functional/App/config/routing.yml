@@ -1,0 +1,3 @@
+
+MediapartLaPresseLibre:
+  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing.yml"

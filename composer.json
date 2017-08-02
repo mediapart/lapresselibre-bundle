@@ -1,0 +1,24 @@
+{
+    "name": "mediapart/lapresselibre-bundle",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "Thomas GASC",
+            "email": "thomas.gasc@mediapart.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Mediapart\\Bundle\\LaPresseLibreBundle\\": "src/",
+            "Mediapart\\Bundle\\LaPresseLibreBundle\\Test\\": "tests/"
+        }
+    },
+    "require": {
+        "mediapart/lapresselibre": "@dev",
+        "symfony/psr-http-message-bridge": "^1.0",
+        "zendframework/zend-diactoros": "^1.4"
+    },
+    "require-dev": {
+        "symfony/symfony": "^3.3"
+    }
+}
