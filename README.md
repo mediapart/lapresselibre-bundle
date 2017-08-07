@@ -2,50 +2,62 @@
 
 ## Installation
 
-Install the package with Composer :
+Install the package with Composer:
 
 ```
 composer require mediapart/lapresselibre-bundle
 ```
 
-Update `app/AppKernel.php` :
+Load the bundle into your Kernel:
 
 ```php
+# app/AppKernel.php
+
 $bundles = array(
     // ...
     new Meup\Bundle\LaPresseLibreBundle\MediapartLaPresseLibreBundle(),
 );
 ```
 
+Configure your App with your LaPresseLibre credentials:
+
 ```yaml
 # app/config/config.yml
 
 mediapart_lapresselibre:
-    public_key:   2
-    secret_key:   "mGoMuzoX8u"
-    aes_password: "UKKzV7sxiGx3uc0auKrUO2kJTT2KSCeg"
-    aes_iv:       "7405589013321961"
+    public_key:   %lapresselibre_publickey%
+    secret_key:   %lapresselibre_secretkey%
+    aes_password: %lapresselibre_aespassword%
+    aes_iv:       %lapresselibre_aesiv%
 ```
+
+Configure the routing:
 
 ```yaml
 # app/config/routing.yml
 
 MediapartLaPresseLibre:
   resource: "@MediapartLaPresseLibreBundle/Resources/config/routing.yml"
+  #prefix: lapresselibre/
 ```
+
+Define your domain:
 
 ```yaml
 # app/config/services.yml
 
 services:
-    your_verification_service:
-        class: Acme\LaPresseLibre\Verification
-        tags:
-              - { name: lapresselibre, route: "lapresselibre_verification", operation: 'Mediapart\LaPresseLibre\Operation\Verification', method: 'alwaysVerifiedAccounts' }
+  your_verification_service:
+    class: Acme\LaPresseLibre\Verification
+    arguments: 
+      - %lapresselibre_publickey%
+      tags:
+        - { name: lapresselibre, route: "lapresselibre_verification", operation: 'Mediapart\LaPresseLibre\Operation\Verification', method: 'alwaysVerifiedAccounts' }
 ```
 
 ```php
 <?php
+# src/Acme/LaPresseLibre/Verification.php
 
 namespace Acme\LaPresseLibre;
 

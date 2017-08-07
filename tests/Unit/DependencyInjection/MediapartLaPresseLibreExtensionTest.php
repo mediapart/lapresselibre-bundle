@@ -52,4 +52,14 @@ class MediapartLaPresseLibreExtensionTest extends TestCase
 
         $this->assertTrue($container->has('mediapart_lapresselibre.controller'));
     }
+
+    /**
+     *
+     */
+    public function testLoadRegistration()
+    {
+        $container = $this->loadContainer();
+
+        $this->assertTrue($container->has('mediapart_lapresselibre.registration'));
+    }
 }

@@ -30,7 +30,7 @@ class OperationCompilerPassTest extends TestCase
         $definition
             ->expects($this->exactly($nbDeclarationsExpected))
             ->method('addMethodCall')
-            ->with('declare')
+            ->with('register')
         ;
         $container->setDefinition(
             'mediapart_lapresselibre.endpoint_factory', 

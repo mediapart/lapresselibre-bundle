@@ -45,7 +45,7 @@ class OperationTest extends TestCase
                 'X-LPL' => $signature,
                 'X-TS' => $timestamp
             ],
-            $operation->headers()
+            $operation->getHttpResponseHeader()
         );
     }
 

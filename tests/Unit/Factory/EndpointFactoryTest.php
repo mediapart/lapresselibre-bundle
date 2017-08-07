@@ -26,7 +26,7 @@ class EndpointFactoryTest extends TestCase
         $service = $this->createMock(VerificationService::class);
 
         $factory = new EndpointFactory();
-        $factory->declare($service, $attributes);
+        $factory->register($service, $attributes);
         $endpoint = $factory->create($route);
 
         $this->assertInstanceOf(Verification::class, $endpoint);

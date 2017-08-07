@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Mediapart LaPresseLibre Bundle.
+ *
+ * CC BY-NC-SA <https://github.com/mediapart/lapresselibre-bundle>
+ *
+ * For the full license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Mediapart\Bundle\LaPresseLibreBundle\Test\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
@@ -18,7 +27,7 @@ class ApiControllerTest extends TestCase
      */
     public function testBadRequest()
     {
-        $response = $this->getResponseWithException(new \InvalidArgumentException());
+        $response = $this->createResponseWithException(new \InvalidArgumentException());
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
@@ -28,7 +37,7 @@ class ApiControllerTest extends TestCase
      */
     public function testUnauthorized()
     {
-        $response = $this->getResponseWithException(new \UnexpectedValueException());
+        $response = $this->createResponseWithException(new \UnexpectedValueException());
 
         $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
     }
@@ -38,7 +47,7 @@ class ApiControllerTest extends TestCase
      */
     public function testInternalServerError()
     {
-        $response = $this->getResponseWithException(new \Exception());
+        $response = $this->createResponseWithException(new \Exception());
 
         $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
     }
@@ -49,17 +58,8 @@ class ApiControllerTest extends TestCase
     public function testSuccess()
     {
         $result = 'foobar';
-        $operation = $this->createMock(Operation::class);
+        $operation = $this->createOperationMock($result);
         $request = $this->createMock(Request::class);
-
-        $operation
-            ->method('process')
-            ->willReturn($result)
-        ;
-        $operation
-            ->method('headers')
-            ->willReturn([])
-        ;
 
         $controller = new ApiController($operation);
         $response = $controller->executeAction($request);
@@ -69,27 +69,39 @@ class ApiControllerTest extends TestCase
     }
 
     /**
-     *
+     * @param Exception $exception
+     * @return Response
      */
-    private function getResponseWithException($exception)
+    private function createResponseWithException($exception)
     {
-        $operation = $this->createMock(Operation::class);
+        $operation = $this->createOperationMock($exception);
         $request = $this->createMock(Request::class);
-
-        $operation
-            ->method('process')
-            ->will(
-                $this->throwException($exception)
-            )
-        ;
-        $operation
-            ->method('headers')
-            ->willReturn([])
-        ;
 
         $controller = new ApiController($operation);
         $response = $controller->executeAction($request);
 
         return $response;
+    }
+
+    /**
+     * @param string|Exception
+     * @return Operation
+     */
+    private function createOperationMock($return)
+    {
+        $operation = $this->createMock(Operation::class);
+        $operation
+            ->method('getHttpResponseHeader')
+            ->willReturn([])
+        ;
+        $process = $operation->method('process');
+
+        if ($return instanceof \Exception) {
+            $process->will($this->throwException($return));
+        } else {
+            $process->willReturn($return);
+        }
+
+        return $operation;
     }
 }

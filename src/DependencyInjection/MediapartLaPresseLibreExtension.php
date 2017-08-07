@@ -1,15 +1,23 @@
 <?php
 
+/**
+ * This file is part of the Mediapart LaPresseLibre Bundle.
+ *
+ * CC BY-NC-SA <https://github.com/mediapart/lapresselibre-bundle>
+ *
+ * For the full license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Mediapart\Bundle\LaPresseLibreBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
-
 use Mediapart\LaPresseLibre\Transaction;
+use Mediapart\LaPresseLibre\Registration;
 use Mediapart\LaPresseLibre\Security\Encryption;
 use Mediapart\LaPresseLibre\Security\Identity;
 use Mediapart\Bundle\LaPresseLibreBundle\Controller\ApiController as Controller;
@@ -24,6 +32,25 @@ use Mediapart\Bundle\LaPresseLibreBundle\Factory\TransactionFactory;
  */
 class MediapartLaPresseLibreExtension extends Extension
 {
+    const PUBLIC_SERVICE = true;
+    const PRIVATE_SERVICE = false;
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string $id
+     * @param string $class
+     * @param array $arguments 
+     * @param boolean $private
+     * @return self
+     */
+    private function setDefinition(ContainerBuilder $container, $id, $class, $arguments = [], $public = self::PUBLIC_SERVICE)
+    {
+        $definition = new Definition($class, $arguments);
+        $definition->setPublic($public);
+        $container->setDefinition($id, $definition);
+        return $this;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -33,7 +60,6 @@ class MediapartLaPresseLibreExtension extends Extension
             new Configuration(),
             $configs
         );
-
         $this
             ->loadIdentity($config, $container)
             ->loadEncryption($config, $container)
@@ -42,33 +68,37 @@ class MediapartLaPresseLibreExtension extends Extension
             ->loadPsr7Factory($config, $container)
             ->loadOperation($config, $container)
             ->loadController($config, $container)
+            ->loadRegistration($config, $container)
         ;
     }
 
     /**
-     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @return self
      */
     private function loadIdentity(array $config, ContainerBuilder $container)
     {
-        $identity = new Definition(
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.identity',
             Identity::class,
             [
                 $config['secret_key'],
             ]
         );
-        $container->setDefinition(
-            'mediapart_lapresselibre.identity', $identity
-        );
-
-        return $this;
     }
 
     /**
-     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @return self
      */
     private function loadEncryption(array $config, ContainerBuilder $container)
     {
-        $encryption = new Definition(
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.encryption',
             Encryption::class,
             [
                 $config['aes_password'],
@@ -76,106 +106,113 @@ class MediapartLaPresseLibreExtension extends Extension
                 $config['aes_options'],
             ]
         );
-        $container->setDefinition(
-            'mediapart_lapresselibre.encryption', $encryption
-        );
-
         return $this;
     }
 
     /**
-     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @return self
      */
     private function loadTransactionFactory(array $config, ContainerBuilder $container)
     {
-        $identity = new Reference('mediapart_lapresselibre.identity');
-        $encryption = new Reference('mediapart_lapresselibre.encryption');
-
-        $factory = new Definition(
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.transaction_factory',
             TransactionFactory::class,
             [
                 $config['public_key'],
-                $identity,
-                $encryption,
-            ]
+                new Reference('mediapart_lapresselibre.identity'),
+                new Reference('mediapart_lapresselibre.encryption'),
+            ],
+            self::PRIVATE_SERVICE
         );
-        $factory->setPublic(false);
-        $container->setDefinition(
-            'mediapart_lapresselibre.transaction_factory', $factory
-        );
-
-        return $this;
     }
 
     /**
-     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @return self
      */
     private function loadEndpointFactory(array $config, ContainerBuilder $container)
     {
-        $factory = new Definition(
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.endpoint_factory',
             EndpointFactory::class,
-            []
+            [],
+            self::PRIVATE_SERVICE
         );
-        $factory->setPublic(false);
-        $container->setDefinition(
-            'mediapart_lapresselibre.endpoint_factory', $factory
-        );
-
-        return $this;
     }
 
     /**
-     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @return self
      */
     private function loadPsr7Factory(array $config, ContainerBuilder $container)
     {
-        $factory = new Definition(
-            DiactorosFactory::class
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.psr7_factory',
+            DiactorosFactory::class,
+            [],
+            self::PRIVATE_SERVICE
         );
-        $factory->setPublic(false);
-        $container->setDefinition(
-            'mediapart_lapresselibre.psr7_factory', $factory
-        );
-
-        return $this;
     }
 
     /**
-     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @return self
      */
     private function loadOperation(array $config, ContainerBuilder $container)
     {
-        $operation = new Definition(
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.operation',
             Operation::class,
             [
                 new Reference('mediapart_lapresselibre.endpoint_factory'),
                 new Reference('mediapart_lapresselibre.transaction_factory'),
                 new Reference('mediapart_lapresselibre.psr7_factory'),
-            ]
+            ],
+            self::PRIVATE_SERVICE
         );
-        $operation->setPublic(false);
-        $container->setDefinition(
-            'mediapart_lapresselibre.operation', $operation
-        );
-
-        return $this;
     }
 
     /**
-     *
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @return self
      */
     private function loadController(array $config, ContainerBuilder $container)
     {
-        $controller = new Definition(
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.controller',
             Controller::class,
             [
                 new Reference('mediapart_lapresselibre.operation'),
             ]
         );
-        $container->setDefinition(
-            'mediapart_lapresselibre.controller', $controller
-        );
+    }
 
-        return $this;
+    /**
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @return self
+     */
+    private function loadRegistration(array $config, ContainerBuilder $container)
+    {
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.registration',
+            Registration::class,
+            [
+                $config['public_key'],
+                new Reference('mediapart_lapresselibre.encryption'),
+            ]
+        );
     }
 }
