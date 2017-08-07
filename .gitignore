@@ -1,3 +1,5 @@
 /coverage/
 /vendor/
 /composer.lock
+/tests/Functional/App/cache
+/tests/Functional/App/logs
