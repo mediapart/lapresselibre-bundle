@@ -19,6 +19,6 @@
         "zendframework/zend-diactoros": "^1.4"
     },
     "require-dev": {
-        "symfony/symfony": "^3.3"
+        "symfony/symfony": "^2.8|^3.3"
     }
 }
