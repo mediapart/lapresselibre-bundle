@@ -15,8 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Controller\ApiController;
 use Mediapart\Bundle\LaPresseLibreBundle\Operation;
 
@@ -30,7 +28,7 @@ class ApiControllerTest extends TestCase
      */
     public function testBadRequest()
     {
-        $this->expectException(BadRequestHttpException::class);
+        $this->expectException(HttpException::class);
 
         $response = $this->createResponseWithException(new \InvalidArgumentException());
     }
@@ -40,7 +38,7 @@ class ApiControllerTest extends TestCase
      */
     public function testUnauthorized()
     {
-        $this->expectException(AccessDeniedHttpException::class);
+        $this->expectException(HttpException::class);
 
         $response = $this->createResponseWithException(new \UnexpectedValueException());
     }

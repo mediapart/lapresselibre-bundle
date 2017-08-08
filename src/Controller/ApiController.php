@@ -14,8 +14,6 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Operation;
 
 /**
@@ -39,6 +37,7 @@ class ApiController
     /**
      * @param Request $request
      * @return Response
+     * @throws HttpException
      */
     public function executeAction(Request $request)
     {
@@ -50,26 +49,38 @@ class ApiController
                 $headers
             );
         } catch (\InvalidArgumentException $exception) {
-            $httpException = new BadRequestHttpException(
+            $this->throwHttpException(
+                Response::HTTP_BAD_REQUEST,
                 $exception->getMessage(),
-                $exception
+                $exception,
+                $headers
             );
-            $httpException->setHeaders($headers);
-            throw $httpException;
         } catch (\UnexpectedValueException $exception) {
-            $httpException = new AccessDeniedHttpException(
+            $this->throwHttpException(
+                Response::HTTP_UNAUTHORIZED,
                 $exception->getMessage(),
-                $exception
+                $exception,
+                $headers
             );
-            $httpException->setHeaders($headers);
-            throw $httpException;
         } catch (\Exception $exception) {
-            throw new HttpException(
+            $this->throwHttpException(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
                 'Internal Error',
                 $exception,
                 $headers
             );
         }
+    }
+
+    /**
+     * @param integer $code
+     * @param string $message
+     * @param Exception $exception
+     * @param array $headers
+     * @throws HttpException
+     */
+    private function throwHttpException($code, $message = '', \Exception $exception, array $headers = [])
+    {
+        throw new HttpException($code, $message, $exception, $headers);
     }
 }
