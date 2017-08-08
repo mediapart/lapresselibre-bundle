@@ -5,6 +5,7 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Test\Functional;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\TestKernel;
 use Mediapart\Bundle\LaPresseLibreBundle\MediapartLaPresseLibreBundle;
 
@@ -34,11 +35,10 @@ class BundleTest extends TestCase
         $kernel = new TestKernel('test', true);
         $kernel->boot();
 
+        $this->expectException(BadRequestHttpException::class);
+
         $request = Request::create('/verification');
         $response = $kernel->handle($request);
-
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertEquals('Missing header X-PART', json_decode($response->getContent())->error);
     }
 
     /**

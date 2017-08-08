@@ -14,6 +14,9 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Test\Unit\Controller;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Controller\ApiController;
 use Mediapart\Bundle\LaPresseLibreBundle\Operation;
 
@@ -27,9 +30,9 @@ class ApiControllerTest extends TestCase
      */
     public function testBadRequest()
     {
-        $response = $this->createResponseWithException(new \InvalidArgumentException());
+        $this->expectException(BadRequestHttpException::class);
 
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $response = $this->createResponseWithException(new \InvalidArgumentException());
     }
 
     /**
@@ -37,9 +40,9 @@ class ApiControllerTest extends TestCase
      */
     public function testUnauthorized()
     {
-        $response = $this->createResponseWithException(new \UnexpectedValueException());
+        $this->expectException(AccessDeniedHttpException::class);
 
-        $this->assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $response = $this->createResponseWithException(new \UnexpectedValueException());
     }
 
     /**
@@ -47,9 +50,9 @@ class ApiControllerTest extends TestCase
      */
     public function testInternalServerError()
     {
-        $response = $this->createResponseWithException(new \Exception());
+        $this->expectException(HttpException::class);
 
-        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $response = $this->createResponseWithException(new \Exception());
     }
 
     /**

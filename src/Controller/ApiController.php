@@ -13,6 +13,9 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Operation;
 
 /**
@@ -39,25 +42,34 @@ class ApiController
      */
     public function executeAction(Request $request)
     {
+        $headers = $this->operation->getHttpResponseHeader();
         try {
-            $status = Response::HTTP_OK;
-            $result = $this->operation->process($request);
-        } catch (\InvalidArgumentException $e) {
-            $status = Response::HTTP_BAD_REQUEST;
-            $result = $e->getMessage();
-        } catch (\UnexpectedValueException $e) {
-            $status = Response::HTTP_UNAUTHORIZED;
-            $result = $e->getMessage();
-        } catch (\Exception $e) {
-            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
-            $result = 'Internal Error';
+            return new Response(
+                $this->operation->process($request),
+                Response::HTTP_OK, 
+                $headers
+            );
+        } catch (\InvalidArgumentException $exception) {
+            $httpException = new BadRequestHttpException(
+                $exception->getMessage(),
+                $exception
+            );
+            $httpException->setHeaders($headers);
+            throw $httpException;
+        } catch (\UnexpectedValueException $exception) {
+            $httpException = new AccessDeniedHttpException(
+                $exception->getMessage(),
+                $exception
+            );
+            $httpException->setHeaders($headers);
+            throw $httpException;
+        } catch (\Exception $exception) {
+            throw new HttpException(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                'Internal Error',
+                $exception,
+                $headers
+            );
         }
-        return new Response(
-            Response::HTTP_OK==$status 
-                ? $result
-                : json_encode(['error' => $result]),
-            $status,
-            $this->operation->getHttpResponseHeader()
-        );
     }
 }
