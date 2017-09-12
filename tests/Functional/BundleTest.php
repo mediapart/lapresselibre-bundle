@@ -9,14 +9,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\TestKernel;
 use Mediapart\Bundle\LaPresseLibreBundle\MediapartLaPresseLibreBundle;
 
-/**
- *
- */
 class BundleTest extends TestCase
 {
-    /**
-     *
-     */
     public function testAKernelWithTheBundle()
     {
         $kernel = new TestKernel('test', true);
@@ -27,9 +21,6 @@ class BundleTest extends TestCase
         $this->assertInstanceOf(MediapartLaPresseLibreBundle::class, $bundle);
     }
 
-    /**
-     *
-     */
     public function testEndpoinWithoutHeaders()
     {
         $kernel = new TestKernel('test', true);
@@ -37,13 +28,10 @@ class BundleTest extends TestCase
 
         $this->expectException(HttpException::class);
 
-        $request = Request::create('/verification');
+        $request = Request::create('https://localhost/verification');
         $response = $kernel->handle($request);
     }
 
-    /**
-     *
-     */
     public function testVerificationEndpoint()
     {
         $kernel = new TestKernel('test', true);
@@ -56,7 +44,7 @@ class BundleTest extends TestCase
         $crd = ['Mail' => 'test@domain.tld', 'CodeUtilisateur' => '42'];
         $crd = $encryption->encrypt($crd);
 
-        $request = Request::create('/verification?crd='.$crd);
+        $request = Request::create('https://localhost/verification?crd='.$crd);
         $request->headers->replace([
             'X-PART' => 2,
             'X-LPL' => $identity->sign(2),

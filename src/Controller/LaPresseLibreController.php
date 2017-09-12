@@ -13,39 +13,42 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Mediapart\Bundle\LaPresseLibreBundle\Operation;
+use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 
 /**
  * Use to respond to the La Presse Libre requests.
  */
-class ApiController
+class LaPresseLibreController
 {
     /**
-     * @var Operation
+     * @var Handler
      */
-    private $operation;
+    private $handler;
 
     /**
-     * @param Operation $operation
+     * @param Handler $handler
      */
-    public function __construct(Operation $operation)
+    public function __construct(Handler $handler)
     {
-        $this->operation = $operation;
+        $this->handler = $handler;
     }
 
     /**
      * @param Request $request
+     *
      * @return Response
+     *
      * @throws HttpException
      */
     public function executeAction(Request $request)
     {
-        $headers = $this->operation->getHttpResponseHeader();
+        $headers = $this->handler->getHttpResponseHeaders();
         try {
-            return new Response(
-                $this->operation->process($request),
-                Response::HTTP_OK, 
+            return new JsonResponse(
+                $this->handler->process($request),
+                Response::HTTP_OK,
                 $headers
             );
         } catch (\InvalidArgumentException $exception) {
@@ -77,6 +80,7 @@ class ApiController
      * @param string $message
      * @param Exception $exception
      * @param array $headers
+     *
      * @throws HttpException
      */
     private function throwHttpException($code, $message = '', \Exception $exception, array $headers = [])

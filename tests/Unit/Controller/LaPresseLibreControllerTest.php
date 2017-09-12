@@ -15,17 +15,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Mediapart\Bundle\LaPresseLibreBundle\Controller\ApiController;
-use Mediapart\Bundle\LaPresseLibreBundle\Operation;
+use Mediapart\Bundle\LaPresseLibreBundle\Controller\LaPresseLibreController;
+use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 
-/**
- *
- */
-class ApiControllerTest extends TestCase
+class LaPresseLibreControllerTest extends TestCase
 {
-    /**
-     *
-     */
     public function testBadRequest()
     {
         $this->expectException(HttpException::class);
@@ -33,9 +27,6 @@ class ApiControllerTest extends TestCase
         $response = $this->createResponseWithException(new \InvalidArgumentException());
     }
 
-    /**
-     *
-     */
     public function testUnauthorized()
     {
         $this->expectException(HttpException::class);
@@ -43,9 +34,6 @@ class ApiControllerTest extends TestCase
         $response = $this->createResponseWithException(new \UnexpectedValueException());
     }
 
-    /**
-     *
-     */
     public function testInternalServerError()
     {
         $this->expectException(HttpException::class);
@@ -53,20 +41,17 @@ class ApiControllerTest extends TestCase
         $response = $this->createResponseWithException(new \Exception());
     }
 
-    /**
-     *
-     */
     public function testSuccess()
     {
         $result = 'foobar';
-        $operation = $this->createOperationMock($result);
+        $handler = $this->createHandlerMock($result);
         $request = $this->createMock(Request::class);
 
-        $controller = new ApiController($operation);
+        $controller = new LaPresseLibreController($handler);
         $response = $controller->executeAction($request);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals($result, $response->getContent());
+        $this->assertEquals($result, json_decode($response->getContent()));
     }
 
     /**
@@ -75,10 +60,10 @@ class ApiControllerTest extends TestCase
      */
     private function createResponseWithException($exception)
     {
-        $operation = $this->createOperationMock($exception);
+        $handler = $this->createHandlerMock($exception);
         $request = $this->createMock(Request::class);
 
-        $controller = new ApiController($operation);
+        $controller = new LaPresseLibreController($handler);
         $response = $controller->executeAction($request);
 
         return $response;
@@ -86,16 +71,16 @@ class ApiControllerTest extends TestCase
 
     /**
      * @param string|Exception
-     * @return Operation
+     * @return Handler
      */
-    private function createOperationMock($return)
+    private function createHandlerMock($return)
     {
-        $operation = $this->createMock(Operation::class);
-        $operation
-            ->method('getHttpResponseHeader')
+        $handler = $this->createMock(Handler::class);
+        $handler
+            ->method('getHttpResponseHeaders')
             ->willReturn([])
         ;
-        $process = $operation->method('process');
+        $process = $handler->method('process');
 
         if ($return instanceof \Exception) {
             $process->will($this->throwException($return));
@@ -103,6 +88,6 @@ class ApiControllerTest extends TestCase
             $process->willReturn($return);
         }
 
-        return $operation;
+        return $handler;
     }
 }

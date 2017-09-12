@@ -17,10 +17,7 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Mediapart\Bundle\LaPresseLibreBundle\Factory\EndpointFactory;
 use Mediapart\Bundle\LaPresseLibreBundle\Factory\TransactionFactory;
 
-/**
- *
- */
-class Operation
+class Handler
 {
     /**
      * @var EndpointFactory
@@ -55,7 +52,6 @@ class Operation
      */
     public function process(Request $request)
     {
-        $route = $request->get('_route');
         $psrRequest = $this
             ->psr7Factory
             ->createRequest($request)
@@ -66,7 +62,7 @@ class Operation
         ;
         $endpoint = $this
             ->endpointFactory
-            ->create($route)
+            ->create($request->get('_route'))
         ;
 
         return $transaction->process($endpoint);
@@ -75,7 +71,7 @@ class Operation
     /**
      * @return array Required HTTP Response headers
      */
-    public function getHttpResponseHeader()
+    public function getHttpResponseHeaders()
     {
         $publicKey = $this->transactionFactory->getPublicKey();
         $identity = $this->transactionFactory->getIdentity();

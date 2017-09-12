@@ -16,28 +16,27 @@ use Mediapart\LaPresseLibre\Transaction;
 use Mediapart\LaPresseLibre\Security\Identity;
 use Mediapart\LaPresseLibre\Security\Encryption;
 
-/**
- *
- */
 class TransactionFactory
 {
     /**
-     *
+     * @var int
      */
     private $publicKey;
 
     /**
-     *
+     * @var Identity
      */
     private $identity;
 
     /**
-     *
+     * @var Encryption
      */
     private $encryption;
 
     /**
-     *
+     * @param int $publicKey
+     * @param Identity $identity
+     * @param Encryption $encryption
      */
     public function __construct($publicKey, Identity $identity, Encryption $encryption)
     {
@@ -47,17 +46,17 @@ class TransactionFactory
     }
 
     /**
+     * @param Request
      *
+     * @return Transaction
      */
     public function create(Request $request)
     {
-        $transaction = new Transaction($this->identity, $this->encryption, $request);
-
-        return $transaction;
+        return new Transaction($this->identity, $this->encryption, $request);
     }
 
     /**
-     *
+     * @return integer
      */
     public function getPublicKey()
     {
@@ -65,7 +64,7 @@ class TransactionFactory
     }
 
     /**
-     *
+     * @return Identity
      */
     public function getIdentity()
     {

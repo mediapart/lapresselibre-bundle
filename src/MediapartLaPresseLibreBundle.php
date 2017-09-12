@@ -15,9 +15,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Mediapart\Bundle\LaPresseLibreBundle\DependencyInjection\OperationCompilerPass;
 
-/**
- *
- */
 class MediapartLaPresseLibreBundle extends Bundle
 {
     /**

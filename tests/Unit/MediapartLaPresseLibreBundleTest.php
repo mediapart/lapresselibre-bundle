@@ -7,14 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Mediapart\Bundle\LaPresseLibreBundle\MediapartLaPresseLibreBundle;
 use Mediapart\Bundle\LaPresseLibreBundle\DependencyInjection\OperationCompilerPass;
 
-/**
- *
- */
 class MediapartLaPresseLibreBundleTest extends TestCase
 {
-    /**
-     *
-     */
     public function testBuild()
     {
         $container = $this->createMock(ContainerBuilder::class);

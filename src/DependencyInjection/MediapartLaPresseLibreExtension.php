@@ -20,8 +20,8 @@ use Mediapart\LaPresseLibre\Transaction;
 use Mediapart\LaPresseLibre\Registration;
 use Mediapart\LaPresseLibre\Security\Encryption;
 use Mediapart\LaPresseLibre\Security\Identity;
-use Mediapart\Bundle\LaPresseLibreBundle\Controller\ApiController as Controller;
-use Mediapart\Bundle\LaPresseLibreBundle\Operation;
+use Mediapart\Bundle\LaPresseLibreBundle\Controller\LaPresseLibreController as Controller;
+use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 use Mediapart\Bundle\LaPresseLibreBundle\Factory\EndpointFactory;
 use Mediapart\Bundle\LaPresseLibreBundle\Factory\TransactionFactory;
 
@@ -34,22 +34,6 @@ class MediapartLaPresseLibreExtension extends Extension
 {
     const PUBLIC_SERVICE = true;
     const PRIVATE_SERVICE = false;
-
-    /**
-     * @param ContainerBuilder $container
-     * @param string $id
-     * @param string $class
-     * @param array $arguments 
-     * @param boolean $private
-     * @return self
-     */
-    private function setDefinition(ContainerBuilder $container, $id, $class, $arguments = [], $public = self::PUBLIC_SERVICE)
-    {
-        $definition = new Definition($class, $arguments);
-        $definition->setPublic($public);
-        $container->setDefinition($id, $definition);
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -66,7 +50,7 @@ class MediapartLaPresseLibreExtension extends Extension
             ->loadTransactionFactory($config, $container)
             ->loadEndpointFactory($config, $container)
             ->loadPsr7Factory($config, $container)
-            ->loadOperation($config, $container)
+            ->loadHandler($config, $container)
             ->loadController($config, $container)
             ->loadRegistration($config, $container)
         ;
@@ -75,6 +59,7 @@ class MediapartLaPresseLibreExtension extends Extension
     /**
      * @param array $config
      * @param ContainerBuilder $container
+     *
      * @return self
      */
     private function loadIdentity(array $config, ContainerBuilder $container)
@@ -92,6 +77,7 @@ class MediapartLaPresseLibreExtension extends Extension
     /**
      * @param array $config
      * @param ContainerBuilder $container
+     *
      * @return self
      */
     private function loadEncryption(array $config, ContainerBuilder $container)
@@ -112,6 +98,7 @@ class MediapartLaPresseLibreExtension extends Extension
     /**
      * @param array $config
      * @param ContainerBuilder $container
+     *
      * @return self
      */
     private function loadTransactionFactory(array $config, ContainerBuilder $container)
@@ -132,6 +119,7 @@ class MediapartLaPresseLibreExtension extends Extension
     /**
      * @param array $config
      * @param ContainerBuilder $container
+     *
      * @return self
      */
     private function loadEndpointFactory(array $config, ContainerBuilder $container)
@@ -148,6 +136,7 @@ class MediapartLaPresseLibreExtension extends Extension
     /**
      * @param array $config
      * @param ContainerBuilder $container
+     *
      * @return self
      */
     private function loadPsr7Factory(array $config, ContainerBuilder $container)
@@ -164,14 +153,15 @@ class MediapartLaPresseLibreExtension extends Extension
     /**
      * @param array $config
      * @param ContainerBuilder $container
+     *
      * @return self
      */
-    private function loadOperation(array $config, ContainerBuilder $container)
+    private function loadHandler(array $config, ContainerBuilder $container)
     {
         return $this->setDefinition(
             $container,
-            'mediapart_lapresselibre.operation',
-            Operation::class,
+            'mediapart_lapresselibre.handler',
+            Handler::class,
             [
                 new Reference('mediapart_lapresselibre.endpoint_factory'),
                 new Reference('mediapart_lapresselibre.transaction_factory'),
@@ -184,6 +174,7 @@ class MediapartLaPresseLibreExtension extends Extension
     /**
      * @param array $config
      * @param ContainerBuilder $container
+     *
      * @return self
      */
     private function loadController(array $config, ContainerBuilder $container)
@@ -193,7 +184,7 @@ class MediapartLaPresseLibreExtension extends Extension
             'mediapart_lapresselibre.controller',
             Controller::class,
             [
-                new Reference('mediapart_lapresselibre.operation'),
+                new Reference('mediapart_lapresselibre.handler'),
             ]
         );
     }
@@ -201,6 +192,7 @@ class MediapartLaPresseLibreExtension extends Extension
     /**
      * @param array $config
      * @param ContainerBuilder $container
+     *
      * @return self
      */
     private function loadRegistration(array $config, ContainerBuilder $container)
@@ -214,5 +206,22 @@ class MediapartLaPresseLibreExtension extends Extension
                 new Reference('mediapart_lapresselibre.encryption'),
             ]
         );
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string $id
+     * @param string $class
+     * @param array $arguments
+     * @param boolean $private
+     *
+     * @return self
+     */
+    private function setDefinition(ContainerBuilder $container, $id, $class, $arguments = [], $public = self::PUBLIC_SERVICE)
+    {
+        $definition = new Definition($class, $arguments);
+        $definition->setPublic($public);
+        $container->setDefinition($id, $definition);
+        return $this;
     }
 }

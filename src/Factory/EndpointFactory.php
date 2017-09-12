@@ -12,35 +12,60 @@
 namespace Mediapart\Bundle\LaPresseLibreBundle\Factory;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Mediapart\LaPresseLibre\Endpoint;
 
-/**
- *
- */
 class EndpointFactory
 {
     /**
-     *
+     * @var Array
      */
-    private $operations = [];
+    private $endpoints = [];
 
     /**
+     * @param object|string $service
+     * @param array $attributes
      *
+     * - method    : method that will be called on $service
+     * - route     : route of the endpoint
+     * - operation : what will be executed
+     *
+     * @return void
+     */
+    public function register($service, array $attributes)
+    {
+        $attributes = $this->resolve($attributes);
+
+        $route    = $attributes['route'];
+        $callback = [$service, $attributes['method']];
+        $endpoint = [$attributes['operation'], $callback];
+
+        $this->endpoints[$route] = $endpoint;
+    }
+
+    /**
+     * @param string $route
+     *
+     * @return Endpoint
      */
     public function create($route)
     {
-        list($class, $callback) = $this->operations[$route];
+        list($class, $callback) = $this->endpoints[$route];
 
         return Endpoint::answer($class, $callback);
     }
 
     /**
+     * @param array $attributes
      *
+     * @return array
      */
-    public function register($service, $attributes)
+    private function resolve(array $attributes)
     {
-        $callback = [$service, $attributes['method']];
+        $resolver = new OptionsResolver();
+        $resolver->setRequired(['method', 'route', 'operation']);
+        $resolver->setAllowedValues('operation', Endpoint::all());
 
-        $this->operations[$attributes['route']] = [$attributes['operation'], $callback];
+        return $resolver->resolve($attributes);
     }
 }

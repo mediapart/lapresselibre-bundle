@@ -19,7 +19,7 @@ $bundles = array(
 );
 ```
 
-Configure your App with your LaPresseLibre credentials:
+Configure your App with your [LaPresseLibre partner credentials](https://partenaire.lapresselibre.fr/gestion/credentials):
 
 ```yaml
 # app/config/config.yml
@@ -37,35 +37,29 @@ Configure the routing:
 # app/config/routing.yml
 
 MediapartLaPresseLibre:
-  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing.yml"
+  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing.php"
   #prefix: lapresselibre/
 ```
 
-Define your domain:
+And then, indicates your endpoints uri into [LaPresseLibre partner platform](https://partenaire.lapresselibre.fr/gestion).
 
-```yaml
-# app/config/services.yml
-
-services:
-  your_verification_service:
-    class: Acme\LaPresseLibre\Verification
-    arguments: 
-      - %lapresselibre_publickey%
-      tags:
-        - { name: lapresselibre, route: "lapresselibre_verification", operation: 'Mediapart\LaPresseLibre\Operation\Verification', method: 'alwaysVerifiedAccounts' }
-```
+Define what your endpoints have to do:
 
 ```php
 <?php
 # src/Acme/LaPresseLibre/Verification.php
 
-namespace Acme\LaPresseLibre;
+namespace AppBundle\LaPresseLibre;
+
+use Mediapart\LaPresseLibre\Subscription\Type as SubscriptionType;
 
 class Verification
 {
-    public function __construct($publicKey)
+    private $public_key;
+
+    public function __construct($public_key)
     {
-        $this->publicKey = $publicKey;
+        $this->public_key = $public_key;
     }
 
     public function alwaysVerifiedAccounts(array $data, $isTesting = false)
@@ -74,13 +68,24 @@ class Verification
         return [
             'Mail' => $data['Mail'],
             'CodeUtilisateur' => $data['CodeUtilisateur'],
-            'TypeAbonnement' => 'mensuel',
+            'TypeAbonnement' => SubscriptionType::MONTHLY,
             'DateExpiration' => $now->format("Y-m-d\TH:i:sO"),
             'DateSouscription' => $now->format("Y-m-d\TH:i:sO"),
             'AccountExist' => true,
-            'PartenaireID' => $this->publicKey,
+            'PartenaireID' => $this->public_key,
         ];
     }
 }
+```
 
+```yaml
+# app/config/services.yml
+
+services:
+  your_verification_service:
+    class: 'AppBundle\LaPresseLibre\Verification'
+    arguments: 
+      - '%lapresselibre_publickey%'
+      tags:
+        - { name: 'lapresselibre', route: 'lapresselibre_verification', operation: 'Mediapart\LaPresseLibre\Operation\Verification', method: 'alwaysVerifiedAccounts' }
 ```

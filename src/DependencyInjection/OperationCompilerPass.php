@@ -19,8 +19,8 @@ use Symfony\Component\DependencyInjection\Reference;
  * This is the class that load you tagged services to be used by endpoint
  */
 class OperationCompilerPass implements CompilerPassInterface
-{   
-	/**
+{
+    /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container)

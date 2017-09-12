@@ -9,14 +9,8 @@ use Mediapart\Bundle\LaPresseLibreBundle\Factory\EndpointFactory;
 use Mediapart\Bundle\LaPresseLibreBundle\DependencyInjection\OperationCompilerPass;
 use Mediapart\Bundle\LaPresseLibreBundle\DependencyInjection\MediapartLaPresseLibreExtension;
 
-/**
- *
- */
 class OperationCompilerPassTest extends TestCase
 {
-    /**
-     *
-     */
     public function testProcess()
     {
         $nbDeclarationsExpected = 3;
@@ -33,7 +27,7 @@ class OperationCompilerPassTest extends TestCase
             ->with('register')
         ;
         $container->setDefinition(
-            'mediapart_lapresselibre.endpoint_factory', 
+            'mediapart_lapresselibre.endpoint_factory',
             $definition
         );
 

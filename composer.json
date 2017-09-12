@@ -1,6 +1,8 @@
 {
     "name": "mediapart/lapresselibre-bundle",
     "type": "symfony-bundle",
+    "description": "Symfony bundle of mediapart/lapresselibre library",
+    "license": "CC BY-NC-SA",
     "authors": [
         {
             "name": "Thomas GASC",
@@ -14,11 +16,14 @@
         }
     },
     "require": {
-        "mediapart/lapresselibre": "@dev",
+        "php": "^5.6|^7.0",
+        "mediapart/lapresselibre": "^1.0",
         "symfony/psr-http-message-bridge": "^1.0",
+        "symfony/options-resolver": "^2.8|^3.3",
         "zendframework/zend-diactoros": "^1.4"
     },
     "require-dev": {
-        "symfony/symfony": "^2.8|^3.3"
+        "symfony/symfony": "^2.8|^3.3",
+        "phpunit/phpunit": "^5.7|^6.3"
     }
 }

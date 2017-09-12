@@ -5,14 +5,8 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Test\Unit\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Mediapart\Bundle\LaPresseLibreBundle\DependencyInjection\Configuration;
 
-/**
- *
- */
 class ConfigurationTest extends TestCase
 {
-    /**
-     *
-     */
     public function testConfigTreeBuilder()
     {
         $configuration = new Configuration();

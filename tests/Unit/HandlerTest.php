@@ -9,18 +9,12 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Mediapart\LaPresseLibre\Transaction;
 use Mediapart\LaPresseLibre\Endpoint;
 use Mediapart\LaPresseLibre\Security\Identity;
-use Mediapart\Bundle\LaPresseLibreBundle\Operation;
+use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 use Mediapart\Bundle\LaPresseLibreBundle\Factory\EndpointFactory;
 use Mediapart\Bundle\LaPresseLibreBundle\Factory\TransactionFactory;
 
-/**
- *
- */
-class OperationTest extends TestCase
+class HandlerTest extends TestCase
 {
-    /**
-     *
-     */
     public function testHeaders()
     {
         $publicKey = 42;
@@ -37,7 +31,7 @@ class OperationTest extends TestCase
         $identity->method('sign')->with($this->equalTo($publicKey))->willReturn($signature);
         $datetime->method('getTimestamp')->willReturn($timestamp);
 
-        $operation = new Operation($endpointFactory, $transactionFactory, $psr7Factory);
+        $handler = new Handler($endpointFactory, $transactionFactory, $psr7Factory);
 
         $this->assertEquals(
             [
@@ -45,13 +39,10 @@ class OperationTest extends TestCase
                 'X-LPL' => $signature,
                 'X-TS' => $timestamp
             ],
-            $operation->getHttpResponseHeader()
+            $handler->getHttpResponseHeaders()
         );
     }
 
-    /**
-     *
-     */
     public function testProcess()
     {
         $content = 'commeunzephir';
@@ -70,8 +61,8 @@ class OperationTest extends TestCase
         $endpointFactory->method('create')->with($this->equalTo($route))->willReturn($endpoint);
         $transaction->expects($this->once())->method('process')->with($this->equalTo($endpoint))->willReturn($content);
 
-        $operation = new Operation($endpointFactory, $transactionFactory, $psr7Factory);
-        $result = $operation->process($request);
+        $handler = new Handler($endpointFactory, $transactionFactory, $psr7Factory);
+        $result = $handler->process($request);
 
         $this->assertEquals($content, $result);
     }

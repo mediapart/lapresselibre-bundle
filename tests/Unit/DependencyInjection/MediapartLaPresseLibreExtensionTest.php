@@ -6,14 +6,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Mediapart\Bundle\LaPresseLibreBundle\DependencyInjection\MediapartLaPresseLibreExtension;
 
-/**
- *
- */
 class MediapartLaPresseLibreExtensionTest extends TestCase
 {
-    /**
-     *
-     */
     private function loadContainer()
     {
         $container = new ContainerBuilder();
@@ -23,9 +17,6 @@ class MediapartLaPresseLibreExtensionTest extends TestCase
         return $container;
     }
 
-    /**
-     *
-     */
     public function testLoadIdentity()
     {
         $container = $this->loadContainer();
@@ -33,9 +24,6 @@ class MediapartLaPresseLibreExtensionTest extends TestCase
         $this->assertTrue($container->has('mediapart_lapresselibre.identity'));
     }
 
-    /**
-     *
-     */
     public function testLoadEncryption()
     {
         $container = $this->loadContainer();
@@ -43,9 +31,6 @@ class MediapartLaPresseLibreExtensionTest extends TestCase
         $this->assertTrue($container->has('mediapart_lapresselibre.encryption'));
     }
 
-    /**
-     *
-     */
     public function testLoadController()
     {
         $container = $this->loadContainer();
@@ -53,9 +38,6 @@ class MediapartLaPresseLibreExtensionTest extends TestCase
         $this->assertTrue($container->has('mediapart_lapresselibre.controller'));
     }
 
-    /**
-     *
-     */
     public function testLoadRegistration()
     {
         $container = $this->loadContainer();

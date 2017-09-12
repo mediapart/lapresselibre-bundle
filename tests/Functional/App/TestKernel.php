@@ -44,5 +44,4 @@ class TestKernel extends Kernel
             'kernel.secret' => rand(),
         ]);
     }
-
 }

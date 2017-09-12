@@ -8,14 +8,8 @@ use Mediapart\Bundle\LaPresseLibreBundle\Factory\TransactionFactory;
 use Mediapart\LaPresseLibre\Security\Identity;
 use Mediapart\LaPresseLibre\Security\Encryption;
 
-/**
- *
- */
 class TransactionFactoryTest extends TestCase
 {
-    /**
-     *
-     */
     public function testCreate()
     {
         $publicKey = 42;
