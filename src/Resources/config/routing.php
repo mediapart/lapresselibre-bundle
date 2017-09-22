@@ -14,43 +14,27 @@ use Symfony\Component\Routing\Route;
 
 $collection = new RouteCollection();
 
-$collection->add(
-    'lapresselibre_verification',
-    new Route(
-        '/verification',
-        ['_controller' => 'mediapart_lapresselibre.controller:executeAction'],
-        [],
-        [],
-        '',
-        ['https'],
-        ['GET']
-    )
+$route = new Route(
+    '/verification',
+    ['_controller' => 'mediapart_lapresselibre.controller:executeAction']
 );
+$route->setMethods(['GET']);
+$collection->add('lapresselibre_verification', $route);
 
-$collection->add(
-    'lapresselibre_account_creation',
-    new Route(
-        '/account-creation',
-        ['_controller' => 'mediapart_lapresselibre.controller:executeAction'],
-        [],
-        [],
-        '',
-        ['https'],
-        ['POST']
-    )
+$route = new Route(
+    '/account-creation',
+    ['_controller' => 'mediapart_lapresselibre.controller:executeAction']
 );
+$route->setMethods(['POST']);
+$collection->add('lapresselibre_account_creation', $route);
 
-$collection->add(
-    'lapresselibre_account_updates',
-    new Route(
-        '/account-updates',
-        ['_controller' => 'mediapart_lapresselibre.controller:executeAction'],
-        [],
-        [],
-        '',
-        ['https'],
-        ['PUT']
-    )
+$route = new Route(
+    '/account-update',
+    ['_controller' => 'mediapart_lapresselibre.controller:executeAction']
 );
+$route->setMethods(['PUT']);
+$collection->add('lapresselibre_account_update', $route);
+
+$collection->setSchemes(['https']);
 
 return $collection;
