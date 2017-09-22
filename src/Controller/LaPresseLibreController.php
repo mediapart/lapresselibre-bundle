@@ -45,8 +45,9 @@ class LaPresseLibreController
     public function executeAction(Request $request)
     {
         $headers = $this->handler->getHttpResponseHeaders();
+
         try {
-            return new JsonResponse(
+            $response = new JsonResponse(
                 $this->handler->process($request),
                 Response::HTTP_OK,
                 $headers
@@ -73,6 +74,8 @@ class LaPresseLibreController
                 $headers
             );
         }
+
+        return $response;
     }
 
     /**
