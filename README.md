@@ -1,4 +1,6 @@
-# `La Presse Libre` Bundle
+# `La Presse Libre` Symfony Bundle
+
+[![Build Status](https://secure.travis-ci.org/mediapart/lapresselibre-bundle.svg?branch=master)](http://travis-ci.org/mediapart/lapresselibre-bundle) [![Code Coverage](https://codecov.io/gh/mediapart/lapresselibre-bundle/branch/master/graph/badge.svg)](https://scrutinizer-ci.com/g/mediapart/lapresselibre-bundle) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/mediapart/lapresselibre-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mediapart/lapresselibre-bundle) [![Total Downloads](https://poser.pugx.org/mediapart/lapresselibre-bundle/downloads.png)](https://packagist.org/packages/mediapart/lapresselibre-bundle) [![Latest Stable Version](https://poser.pugx.org/mediapart/lapresselibre-bundle/v/stable.png)](https://packagist.org/packages/mediapart/lapresselibre-bundle)
 
 ## Installation
 
@@ -43,7 +45,8 @@ MediapartLaPresseLibre:
 
 And then, indicates your endpoints uri into [LaPresseLibre partner platform](https://partenaire.lapresselibre.fr/gestion).
 
-Define what your endpoints have to do:
+Define what your endpoints have to do.
+For example, Your [verification endpoint](https://github.com/NextINpact/LaPresseLibreSDK/wiki/Fonctionnement-des-web-services#web-service-de-v%C3%A9rification-de-comptes-existants) will look like :
 
 ```php
 <?php
