@@ -50,7 +50,7 @@ class MediapartLaPresseLibreExtension extends Extension
             ->loadTransactionFactory($config, $container)
             ->loadEndpointFactory($container)
             ->loadPsr7Factory($container)
-            ->loadHandler($config, $container)
+            ->loadHandler($container)
             ->loadController($container)
             ->loadRegistration($config, $container)
         ;
@@ -148,12 +148,11 @@ class MediapartLaPresseLibreExtension extends Extension
     }
 
     /**
-     * @param array $config
      * @param ContainerBuilder $container
      *
      * @return self
      */
-    private function loadHandler(array $config, ContainerBuilder $container)
+    private function loadHandler(ContainerBuilder $container)
     {
         return $this->setDefinition(
             $container,
