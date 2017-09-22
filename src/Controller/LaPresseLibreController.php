@@ -78,7 +78,7 @@ class LaPresseLibreController
     /**
      * @param integer $code
      * @param string $message
-     * @param Exception $exception
+     * @param \Exception $exception
      * @param array $headers
      *
      * @throws HttpException

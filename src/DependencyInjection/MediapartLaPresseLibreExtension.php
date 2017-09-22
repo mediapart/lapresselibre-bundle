@@ -48,10 +48,10 @@ class MediapartLaPresseLibreExtension extends Extension
             ->loadIdentity($config, $container)
             ->loadEncryption($config, $container)
             ->loadTransactionFactory($config, $container)
-            ->loadEndpointFactory($config, $container)
-            ->loadPsr7Factory($config, $container)
+            ->loadEndpointFactory($container)
+            ->loadPsr7Factory($container)
             ->loadHandler($config, $container)
-            ->loadController($config, $container)
+            ->loadController($container)
             ->loadRegistration($config, $container)
         ;
     }
@@ -92,7 +92,6 @@ class MediapartLaPresseLibreExtension extends Extension
                 $config['aes_options'],
             ]
         );
-        return $this;
     }
 
     /**
@@ -117,12 +116,11 @@ class MediapartLaPresseLibreExtension extends Extension
     }
 
     /**
-     * @param array $config
      * @param ContainerBuilder $container
      *
      * @return self
      */
-    private function loadEndpointFactory(array $config, ContainerBuilder $container)
+    private function loadEndpointFactory(ContainerBuilder $container)
     {
         return $this->setDefinition(
             $container,
@@ -134,12 +132,11 @@ class MediapartLaPresseLibreExtension extends Extension
     }
 
     /**
-     * @param array $config
      * @param ContainerBuilder $container
      *
      * @return self
      */
-    private function loadPsr7Factory(array $config, ContainerBuilder $container)
+    private function loadPsr7Factory(ContainerBuilder $container)
     {
         return $this->setDefinition(
             $container,
@@ -172,12 +169,11 @@ class MediapartLaPresseLibreExtension extends Extension
     }
 
     /**
-     * @param array $config
      * @param ContainerBuilder $container
      *
      * @return self
      */
-    private function loadController(array $config, ContainerBuilder $container)
+    private function loadController(ContainerBuilder $container)
     {
         return $this->setDefinition(
             $container,
