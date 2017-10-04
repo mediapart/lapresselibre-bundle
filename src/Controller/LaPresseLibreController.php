@@ -48,7 +48,7 @@ class LaPresseLibreController
             ['Content-Type' => 'application/json']
         );
         try {
-            return new Response(
+            $response = new Response(
                 $this->handler->process($request),
                 Response::HTTP_OK,
                 $headers
