@@ -51,7 +51,7 @@ class LaPresseLibreControllerTest extends TestCase
         $response = $controller->executeAction($request);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals($result, json_decode($response->getContent()));
+        $this->assertEquals($result, $response->getContent());
     }
 
     /**

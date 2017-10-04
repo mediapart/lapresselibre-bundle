@@ -13,7 +13,6 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 
@@ -44,10 +43,12 @@ class LaPresseLibreController
      */
     public function executeAction(Request $request)
     {
-        $headers = $this->handler->getHttpResponseHeaders();
-
+        $headers = array_merge(
+            $this->handler->getHttpResponseHeaders(),
+            ['Content-Type' => 'application/json']
+        );
         try {
-            $response = new JsonResponse(
+            return new Response(
                 $this->handler->process($request),
                 Response::HTTP_OK,
                 $headers
