@@ -17,7 +17,7 @@ Load the bundle into your Kernel:
 
 $bundles = array(
     // ...
-    new Meup\Bundle\LaPresseLibreBundle\MediapartLaPresseLibreBundle(),
+    new Mediapart\Bundle\LaPresseLibreBundle\MediapartLaPresseLibreBundle(),
 );
 ```
 
@@ -26,11 +26,17 @@ Configure your App with your [LaPresseLibre partner credentials](https://partena
 ```yaml
 # app/config/config.yml
 
-mediapart_lapresselibre:
+mediapart_la_presse_libre:
     public_key:   %lapresselibre_publickey%
     secret_key:   %lapresselibre_secretkey%
     aes_password: %lapresselibre_aespassword%
     aes_iv:       %lapresselibre_aesiv%
+    
+# correspondance avec le json des credentials:
+#  public_key : "CodePartenaire"
+#  secret_key: "Secret"
+#  aes_password: "Aes"
+#  aes_iv: "Iv"
 ```
 
 Configure the routing:
