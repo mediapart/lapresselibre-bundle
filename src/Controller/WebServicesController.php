@@ -13,14 +13,15 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 
 /**
  * Use to respond to the La Presse Libre requests.
  */
-class LaPresseLibreController
+class WebServicesController
 {
+    use ThrowHttpException;
+
     /**
      * @var Handler
      */
@@ -41,7 +42,7 @@ class LaPresseLibreController
      *
      * @throws HttpException
      */
-    public function executeAction(Request $request)
+    public function __invoke(Request $request)
     {
         $headers = array_merge(
             $this->handler->getHttpResponseHeaders(),
@@ -77,18 +78,5 @@ class LaPresseLibreController
         }
 
         return $response;
-    }
-
-    /**
-     * @param integer $code
-     * @param string $message
-     * @param \Exception $exception
-     * @param array $headers
-     *
-     * @throws HttpException
-     */
-    private function throwHttpException($code, $message = '', \Exception $exception, array $headers = [])
-    {
-        throw new HttpException($code, $message, $exception, $headers);
     }
 }

@@ -15,10 +15,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Mediapart\Bundle\LaPresseLibreBundle\Controller\LaPresseLibreController;
+use Mediapart\Bundle\LaPresseLibreBundle\Controller\WebServicesController;
 use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 
-class LaPresseLibreControllerTest extends TestCase
+class WebServicesControllerTest extends TestCase
 {
     public function testBadRequest()
     {
@@ -47,8 +47,8 @@ class LaPresseLibreControllerTest extends TestCase
         $handler = $this->createHandlerMock($result);
         $request = $this->createMock(Request::class);
 
-        $controller = new LaPresseLibreController($handler);
-        $response = $controller->executeAction($request);
+        $controller = new WebServicesController($handler);
+        $response = $controller($request);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals($result, $response->getContent());
@@ -63,8 +63,8 @@ class LaPresseLibreControllerTest extends TestCase
         $handler = $this->createHandlerMock($exception);
         $request = $this->createMock(Request::class);
 
-        $controller = new LaPresseLibreController($handler);
-        $response = $controller->executeAction($request);
+        $controller = new WebServicesController($handler);
+        $response = $controller($request);
 
         return $response;
     }

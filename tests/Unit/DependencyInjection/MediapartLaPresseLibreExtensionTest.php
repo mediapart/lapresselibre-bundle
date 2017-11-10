@@ -5,6 +5,7 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Test\Unit\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Mediapart\Bundle\LaPresseLibreBundle\DependencyInjection\MediapartLaPresseLibreExtension;
+use Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\Account;
 
 class MediapartLaPresseLibreExtensionTest extends TestCase
 {
@@ -12,7 +13,17 @@ class MediapartLaPresseLibreExtensionTest extends TestCase
     {
         $container = new ContainerBuilder();
         $extension = new MediapartLaPresseLibreExtension();
-        $extension->load([], $container);
+        $extension->load(
+            [
+                'mediapart_la_presse_libre' => [
+                    'account' => [
+                        'repository' => Account\Repository::class, 
+                        'provider' => Account\Provider::class,
+                    ]
+                ]
+            ], 
+            $container
+        );
 
         return $container;
     }
@@ -31,11 +42,11 @@ class MediapartLaPresseLibreExtensionTest extends TestCase
         $this->assertTrue($container->has('mediapart_lapresselibre.encryption'));
     }
 
-    public function testLoadController()
+    public function testLoadWebServicesController()
     {
         $container = $this->loadContainer();
 
-        $this->assertTrue($container->has('mediapart_lapresselibre.controller'));
+        $this->assertTrue($container->has('mediapart_lapresselibre.webservices_controller'));
     }
 
     public function testLoadRegistration()

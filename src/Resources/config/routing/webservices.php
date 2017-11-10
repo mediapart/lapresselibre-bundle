@@ -16,21 +16,21 @@ $collection = new RouteCollection();
 
 $route = new Route(
     '/verification',
-    ['_controller' => 'mediapart_lapresselibre.controller:executeAction']
+    ['_controller' => 'mediapart_lapresselibre.webservices_controller']
 );
 $route->setMethods(['GET']);
 $collection->add('lapresselibre_verification', $route);
 
 $route = new Route(
     '/account-creation',
-    ['_controller' => 'mediapart_lapresselibre.controller:executeAction']
+    ['_controller' => 'mediapart_lapresselibre.webservices_controller']
 );
 $route->setMethods(['POST']);
 $collection->add('lapresselibre_account_creation', $route);
 
 $route = new Route(
     '/account-update',
-    ['_controller' => 'mediapart_lapresselibre.controller:executeAction']
+    ['_controller' => 'mediapart_lapresselibre.webservices_controller']
 );
 $route->setMethods(['PUT']);
 $collection->add('lapresselibre_account_update', $route);

@@ -17,7 +17,7 @@ Load the bundle into your Kernel:
 
 $bundles = array(
     // ...
-    new Meup\Bundle\LaPresseLibreBundle\MediapartLaPresseLibreBundle(),
+    new Mediapart\Bundle\LaPresseLibreBundle\MediapartLaPresseLibreBundle(),
 );
 ```
 
@@ -33,13 +33,15 @@ mediapart_lapresselibre:
     aes_iv:       %lapresselibre_aesiv%
 ```
 
+### WebServices
+
 Configure the routing:
 
 ```yaml
 # app/config/routing.yml
 
-MediapartLaPresseLibre:
-  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing.php"
+MediapartLaPresseLibreWebServices:
+  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing/webservices.php"
   #prefix: lapresselibre/
 ```
 
@@ -89,6 +91,48 @@ services:
     class: 'AppBundle\LaPresseLibre\Verification'
     arguments: 
       - '%lapresselibre_publickey%'
-      tags:
-        - { name: 'lapresselibre', route: 'lapresselibre_verification', operation: 'Mediapart\LaPresseLibre\Operation\Verification', method: 'alwaysVerifiedAccounts' }
+    tags:
+      - { name: 'lapresselibre', route: 'lapresselibre_verification', operation: 'Mediapart\LaPresseLibre\Operation\Verification', method: 'alwaysVerifiedAccounts' }
 ```
+
+### Link Account
+
+https://github.com/NextINpact/LaPresseLibreSDK/wiki/Liaison-de-compte-utilisateur-par-redirection
+
+Configure the routing:
+
+```yaml
+# app/config/routing.yml
+
+MediapartLaPresseLibreLinkAccount:
+  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing/link-account.php"
+  #prefix: lapresselibre/
+```
+
+Implements `Mediapart/LaPresseLibre/Account/Repository` and `Mediapart\Bundle\LaPresseLibreBundle\Account\AccountProvider` interfaces.
+
+```yaml
+# app/config/services.yml
+
+services:
+  # …
+  your_account_repository:
+    class: 'AppBundle\LaPresseLibre\AccountRepository'
+  your_account_provider:
+    class: 'AppBundle\LaPresseLibre\AccountProvider'
+```
+
+Update the config :
+
+```yaml
+# app/config/config.yml
+
+mediapart_lapresselibre:
+    # …
+    account:
+        repository: 'your_account_repository'
+        provider: 'your_account_provider'
+```
+
+
+
