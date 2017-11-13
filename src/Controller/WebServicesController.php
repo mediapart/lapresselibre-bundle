@@ -13,6 +13,7 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 
 /**
@@ -20,8 +21,6 @@ use Mediapart\Bundle\LaPresseLibreBundle\Handler;
  */
 class WebServicesController
 {
-    use ThrowHttpException;
-
     /**
      * @var Handler
      */
@@ -78,5 +77,18 @@ class WebServicesController
         }
 
         return $response;
+    }
+
+    /**
+     * @param integer $code
+     * @param string $message
+     * @param \Exception $exception
+     * @param array $headers
+     *
+     * @throws HttpException
+     */
+    protected function throwHttpException($code, $message = '', \Exception $exception, array $headers = [])
+    {
+        throw new HttpException($code, $message, $exception, $headers);
     }
 }

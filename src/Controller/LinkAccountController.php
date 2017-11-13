@@ -14,6 +14,7 @@ namespace Mediapart\Bundle\LaPresseLibreBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Mediapart\Bundle\LaPresseLibreBundle\Factory\RedirectionFactory;
 
 /**
@@ -21,8 +22,6 @@ use Mediapart\Bundle\LaPresseLibreBundle\Factory\RedirectionFactory;
  */
 class LinkAccountController
 {
-    use ThrowHttpException;
-
     /**
      * @var RedirectionFactory
      */
@@ -52,8 +51,8 @@ class LinkAccountController
             ;
             $response = new RedirectResponse($redirection);
         } catch (\Exception $exception) {
-            $this->throwHttpException(
-                Response::HTTP_INTERNAL_SERVER_ERROR,
+            throw new HttpException(
+                Response::HTTP_INTERNAL_SERVER_ERROR, 
                 'Internal Error',
                 $exception
             );
