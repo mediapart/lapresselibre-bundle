@@ -19,6 +19,7 @@ class ConfigurationTest extends TestCase
             'aes_password',
             'aes_iv',
             'aes_options',
+            'account',
         ], array_keys($tree->getChildren()));
     }
 }

@@ -18,12 +18,12 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Mediapart\LaPresseLibre\Transaction;
 use Mediapart\LaPresseLibre\Registration;
+use Mediapart\LaPresseLibre\Account\Link;
 use Mediapart\LaPresseLibre\Security\Encryption;
 use Mediapart\LaPresseLibre\Security\Identity;
-use Mediapart\Bundle\LaPresseLibreBundle\Controller\LaPresseLibreController as Controller;
+use Mediapart\Bundle\LaPresseLibreBundle\Controller;
 use Mediapart\Bundle\LaPresseLibreBundle\Handler;
-use Mediapart\Bundle\LaPresseLibreBundle\Factory\EndpointFactory;
-use Mediapart\Bundle\LaPresseLibreBundle\Factory\TransactionFactory;
+use Mediapart\Bundle\LaPresseLibreBundle\Factory;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -48,11 +48,14 @@ class MediapartLaPresseLibreExtension extends Extension
             ->loadIdentity($config, $container)
             ->loadEncryption($config, $container)
             ->loadTransactionFactory($config, $container)
+            ->loadRedirectionFactory($config, $container)
             ->loadEndpointFactory($container)
             ->loadPsr7Factory($container)
             ->loadHandler($container)
-            ->loadController($container)
+            ->loadWebServicesController($container)
+            ->loadLinkAccountController($config, $container)
             ->loadRegistration($config, $container)
+            ->loadLink($config, $container)
         ;
     }
 
@@ -105,7 +108,7 @@ class MediapartLaPresseLibreExtension extends Extension
         return $this->setDefinition(
             $container,
             'mediapart_lapresselibre.transaction_factory',
-            TransactionFactory::class,
+            Factory\TransactionFactory::class,
             [
                 $config['public_key'],
                 new Reference('mediapart_lapresselibre.identity'),
@@ -125,8 +128,28 @@ class MediapartLaPresseLibreExtension extends Extension
         return $this->setDefinition(
             $container,
             'mediapart_lapresselibre.endpoint_factory',
-            EndpointFactory::class,
+            Factory\EndpointFactory::class,
             [],
+            self::PRIVATE_SERVICE
+        );
+    }
+
+    /**
+     * @param array $config
+     * @param ContainerBuilder $container
+     *
+     * @return self
+     */
+    private function loadRedirectionFactory(array $config, ContainerBuilder $container)
+    {
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.redirection_factory',
+            Factory\RedirectionFactory::class,
+            [
+                new Reference('mediapart_lapresselibre.link'),
+                new Reference($config['account']['provider'])
+            ],
             self::PRIVATE_SERVICE
         );
     }
@@ -172,14 +195,32 @@ class MediapartLaPresseLibreExtension extends Extension
      *
      * @return self
      */
-    private function loadController(ContainerBuilder $container)
+    private function loadWebServicesController(ContainerBuilder $container)
     {
         return $this->setDefinition(
             $container,
-            'mediapart_lapresselibre.controller',
-            Controller::class,
+            'mediapart_lapresselibre.webservices_controller',
+            Controller\WebServicesController::class,
             [
                 new Reference('mediapart_lapresselibre.handler'),
+            ]
+        );
+    }
+
+    /**
+     * @param array $config
+     * @param ContainerBuilder $container
+     *
+     * @return self
+     */
+    private function loadLinkAccountController(array $config, ContainerBuilder $container)
+    {
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.linkaccount_controller',
+            Controller\LinkAccountController::class,
+            [
+                new Reference('mediapart_lapresselibre.redirection_factory'),
             ]
         );
     }
@@ -199,6 +240,20 @@ class MediapartLaPresseLibreExtension extends Extension
             [
                 $config['public_key'],
                 new Reference('mediapart_lapresselibre.encryption'),
+            ]
+        );
+    }
+
+    private function loadLink(array $config, ContainerBuilder $container)
+    {
+        return $this->setDefinition(
+            $container,
+            'mediapart_lapresselibre.link',
+            Link::class,
+            [
+                new Reference('mediapart_lapresselibre.encryption'),
+                new Reference($config['account']['repository']),
+                $config['public_key'],
             ]
         );
     }

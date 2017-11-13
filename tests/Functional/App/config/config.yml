@@ -9,8 +9,15 @@ mediapart_la_presse_libre:
     aes_password: "0MguQPENiFHxFDTY4TqoTWlTZh6nXIrV"
     aes_iv:       null
     aes_options:  0
+    account:
+      repository: 'account_repository'
+      provider: 'account_provider'
 
 services:
+  account_repository:
+    class: Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\Account\Repository
+  account_provider:
+    class: Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\Account\Provider
   verification_service:
     class: Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\VerificationService
     arguments: [2]
