@@ -3,7 +3,6 @@
     "type": "symfony-bundle",
     "description": "Symfony bundle of mediapart/lapresselibre library",
     "license": "CC BY-NC-SA",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Thomas GASC",
@@ -24,7 +23,7 @@
         "zendframework/zend-diactoros": "^1.4"
     },
     "require-dev": {
-        "symfony/symfony": "^2.8|3.3.11",
+        "symfony/symfony": "^2.8|^3.3",
         "phpunit/phpunit": "^5.7|^6.3"
     }
 }
