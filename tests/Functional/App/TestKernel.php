@@ -37,10 +37,11 @@ class TestKernel extends Kernel
     protected function getKernelParameters()
     {
         return array_merge(parent::getKernelParameters(), [
-            'lapresselibre_publickey' => '',
-            'lapresselibre_secretkey' => '',
-            'lapresselibre_aespassword' => '',
-            'lapresselibre_aesiv' => '',
+            'lapresselibre_publickey' => getenv('lapresselibre_publickey'),
+            'lapresselibre_secretkey' => getenv('lapresselibre_secretkey'),
+            'lapresselibre_aespassword' => getenv('lapresselibre_aespassword'),
+            'lapresselibre_aesiv' => getenv('lapresselibre_aesiv'),
+            'lapresselibre_aesoptions' => getenv('lapresselibre_aesoptions'),
             'kernel.secret' => rand(),
         ]);
     }
