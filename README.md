@@ -31,12 +31,6 @@ mediapart_la_presse_libre:
     secret_key:   %lapresselibre_secretkey%
     aes_password: %lapresselibre_aespassword%
     aes_iv:       %lapresselibre_aesiv%
-    
-# correspondance avec le json des credentials:
-#  public_key : "CodePartenaire"
-#  secret_key: "Secret"
-#  aes_password: "Aes"
-#  aes_iv: "Iv"
 ```
 
 ### WebServices

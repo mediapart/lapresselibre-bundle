@@ -19,4 +19,12 @@
       </whitelist>
   </filter>
 
+  <php>
+    <env name="lapresselibre_publickey" value="2" />
+    <env name="lapresselibre_secretkey" value="mGoMuzoX8u" />
+    <env name="lapresselibre_aespassword" value="UKKzV7sxiGx3uc0auKrUO2kJTT2KSCeg" />
+    <env name="lapresselibre_aesiv" value="7405589013321961" />
+    <env name="lapresselibre_aesoptions" value="0" />
+  </php>
+
 </phpunit>
