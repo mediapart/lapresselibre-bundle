@@ -1,3 +1,6 @@
 
-MediapartLaPresseLibre:
-  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing.php"
+MediapartLaPresseLibreWebServices:
+  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing/webservices.php"
+
+MediapartLaPresseLibreLinkAccount:
+  resource: "@MediapartLaPresseLibreBundle/Resources/config/routing/link-account.php"

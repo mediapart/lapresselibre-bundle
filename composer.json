@@ -11,13 +11,17 @@
     ],
     "autoload": {
         "psr-4": {
-            "Mediapart\\Bundle\\LaPresseLibreBundle\\": "src/",
-            "Mediapart\\Bundle\\LaPresseLibreBundle\\Test\\": "tests/"
+            "Mediapart\\Bundle\\LaPresseLibreBundle\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mediapart\\Bundle\\LaPresseLibreBundle\\Test\\": "tests/"
+        }        
     },
     "require": {
         "php": "^5.6|^7.0",
-        "mediapart/lapresselibre": "^1.0",
+        "mediapart/lapresselibre": "^2.0",
         "symfony/psr-http-message-bridge": "^1.0",
         "symfony/options-resolver": "^2.8|^3.3",
         "zendframework/zend-diactoros": "^1.4"

@@ -4,13 +4,20 @@ framework:
     resource: "%kernel.root_dir%/config/routing.yml"
 
 mediapart_la_presse_libre:
-    public_key:   7
-    secret_key:   "ai89f7"
-    aes_password: "0MguQPENiFHxFDTY4TqoTWlTZh6nXIrV"
-    aes_iv:       null
-    aes_options:  0
+    public_key:   "%lapresselibre_publickey%"
+    secret_key:   "%lapresselibre_secretkey%"
+    aes_password: "%lapresselibre_aespassword%"
+    aes_iv:       "%lapresselibre_aesiv%"
+    aes_options:  "%lapresselibre_aesoptions%"
+    account:
+      repository: 'account_repository'
+      provider: 'account_provider'
 
 services:
+  account_repository:
+    class: Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\Account\Repository
+  account_provider:
+    class: Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\Account\Provider
   verification_service:
     class: Mediapart\Bundle\LaPresseLibreBundle\Test\Functional\App\VerificationService
     arguments: [2]

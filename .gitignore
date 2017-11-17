@@ -1,5 +1,6 @@
 /coverage/
 /vendor/
 /composer.lock
+/phpunit.xml
 /tests/Functional/App/cache
 /tests/Functional/App/logs

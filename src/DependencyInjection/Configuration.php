@@ -49,6 +49,12 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('aes_options')
                     ->defaultValue(OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING)
                 ->end()
+                ->arrayNode('account')
+                    ->children()
+                        ->scalarNode('repository')->end()
+                        ->scalarNode('provider')->end()
+                    ->end()
+                ->end()
 
             ->end()
         ;

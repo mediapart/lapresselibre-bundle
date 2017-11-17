@@ -19,7 +19,7 @@ use Mediapart\Bundle\LaPresseLibreBundle\Handler;
 /**
  * Use to respond to the La Presse Libre requests.
  */
-class LaPresseLibreController
+class WebServicesController
 {
     /**
      * @var Handler
@@ -41,7 +41,7 @@ class LaPresseLibreController
      *
      * @throws HttpException
      */
-    public function executeAction(Request $request)
+    public function __invoke(Request $request)
     {
         $headers = array_merge(
             $this->handler->getHttpResponseHeaders(),
@@ -87,7 +87,7 @@ class LaPresseLibreController
      *
      * @throws HttpException
      */
-    private function throwHttpException($code, $message = '', \Exception $exception, array $headers = [])
+    protected function throwHttpException($code, $message = '', \Exception $exception, array $headers = [])
     {
         throw new HttpException($code, $message, $exception, $headers);
     }
