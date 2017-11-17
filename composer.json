@@ -11,9 +11,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Mediapart\\Bundle\\LaPresseLibreBundle\\": "src/",
-            "Mediapart\\Bundle\\LaPresseLibreBundle\\Test\\": "tests/"
+            "Mediapart\\Bundle\\LaPresseLibreBundle\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mediapart\\Bundle\\LaPresseLibreBundle\\Test\\": "tests/"
+        }        
     },
     "require": {
         "php": "^5.6|^7.0",
